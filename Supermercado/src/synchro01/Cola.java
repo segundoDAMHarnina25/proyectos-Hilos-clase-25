@@ -26,6 +26,6 @@ public class Cola {
 
 	public synchronized void put(Optional<Cliente> optional) {
 		push(optional);
-		notifyAll();
+		notify();
 	}
 }
