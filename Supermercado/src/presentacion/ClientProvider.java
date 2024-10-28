@@ -15,10 +15,10 @@ public class ClientProvider implements Runnable {
 	@Override
 	public void run() {
 		do {
-			cola.push(ClientesOM.getRandomClient());
+			cola.put(ClientesOM.getRandomClient());
 			try {
 				int max = 1000;
-				Thread.currentThread().sleep(ClientesOM.getRandomValue(max));
+				Thread.sleep(ClientesOM.getRandomValue(max));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

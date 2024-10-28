@@ -9,7 +9,7 @@ import presentacion.Cliente;
 public class Cola {
 	public ArrayDeque<Cliente> clientes = new ArrayDeque<>();
 
-	public void push(Optional<Cliente> randomClient) {
+	private void push(Optional<Cliente> randomClient) {
 		randomClient.ifPresent((cliente) -> clientes.push(cliente));
 	}
 

@@ -3,16 +3,19 @@ package presentacion;
 import java.time.Duration;
 import java.time.Instant;
 
+import synchro01.Cola;
+
 //solo hay una caja
-public class Caja {
+public class Caja implements Runnable {
 
 	private String nombre;
 
-	public Caja() {
-	}
+	private Cola cola;
 
-	public Caja(String nombre) {
+	public Caja(String nombre, Cola cola) {
+		super();
 		this.nombre = nombre;
+		this.cola = cola;
 	}
 
 	public String getNombre() {
@@ -26,21 +29,17 @@ public class Caja {
 	public void procesarCompra(Cliente cliente) {
 		Instant now = Instant.now();
 		Instant older = now;
-		System.out.println("El cajero " + this.nombre + 
-				" COMIENZA A PROCESAR LA COMPRA DEL CLIENTE " + cliente.getNombre() + 
-				" EN EL TIEMPO: " +older.getEpochSecond()  +
-				"seg");
+		System.out.println("El cajero " + this.nombre + " COMIENZA A PROCESAR LA COMPRA DEL CLIENTE "
+				+ cliente.getNombre() + " EN EL TIEMPO: " + older.getEpochSecond() + "seg");
 
 		for (int i = 0; i < cliente.getCarroCompra().length; i++) {
 			this.esperarXsegundos(cliente.getCarroCompra()[i]);
-			System.out.println("Procesado el producto " + (i + 1) + 
-					" ->Tiempo: " + Duration.between(now,now=Instant.now()).getSeconds() + 
-					"seg");
+			System.out.println("Procesado el producto " + (i + 1) + " ->Tiempo: "
+					+ Duration.between(now, now = Instant.now()).getSeconds() + "seg");
 		}
 
-		System.out.println("El cajero " + this.nombre + " HA TERMINADO DE PROCESAR " + 
-							cliente.getNombre() + " EN EL TIEMPO: " + 
-							Duration.between(older, now) + "seg");
+		System.out.println("El cajero " + this.nombre + " HA TERMINADO DE PROCESAR " + cliente.getNombre()
+				+ " EN EL TIEMPO: " + Duration.between(older, now) + "seg");
 
 	}
 
@@ -50,6 +49,17 @@ public class Caja {
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			procesarCompra(cola.get());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 }
