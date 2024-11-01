@@ -1,6 +1,5 @@
 package synchro06v7BlockinQueue;
 
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

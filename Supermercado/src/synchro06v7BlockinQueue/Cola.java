@@ -17,9 +17,9 @@ public class Cola {
 		return clientes.size() > 10;
 	}
 
-	public Optional<Cliente> get() throws InterruptedException {
+	public Optional<Cliente> get(){
 		if(clientes.isEmpty()) return Optional.empty();
-		return Optional.of(clientes.poll());
+		return Optional.ofNullable(clientes.poll());
 	}
 
 	private void put(Optional<Cliente> optional) {

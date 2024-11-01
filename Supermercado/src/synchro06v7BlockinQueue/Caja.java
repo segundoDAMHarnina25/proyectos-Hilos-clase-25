@@ -36,11 +36,7 @@ public class Caja implements Runnable {
 	public void run() {
 		do {
 			Optional<Cliente> cliente = java.util.Optional.empty();
-			try {
-				cliente = cola.get();
-			} catch (NullPointerException | InterruptedException e) {
-				cliente = java.util.Optional.empty();
-			}
+			cliente = cola.get();
 			cliente.ifPresent((cli) -> {
 				clientesAtendidos.add(cli);
 				procesarCompra(cli, 1);
