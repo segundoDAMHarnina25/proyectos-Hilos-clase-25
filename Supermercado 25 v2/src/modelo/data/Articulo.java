@@ -5,9 +5,9 @@ import java.util.Objects;
 public class Articulo {
 	private String barCode;
 	private String nombre;
-
+	public static final int stockInicial=10;
 	private float precio;
-	private int stock = 10;
+	private int stock = stockInicial;
 
 	public Articulo(String barCode, String nombre, float precio) {
 		super();
@@ -16,7 +16,7 @@ public class Articulo {
 		setPrecio(precio);
 	}
 
-	private float getPrecio() {
+	float getPrecio() {
 		return precio;
 	}
 
@@ -85,13 +85,16 @@ public class Articulo {
 	}
 
 	public boolean comprar(Integer value) {
-//		System.out.println("me piden el articulo "+this.nombre+" en esta cantidad "+value+" y el stock es de "+stock);
 		boolean comprobarStock = comprobarStock(value);
-//		System.out.println("la comprabacion es "+comprobarStock);
-//		System.out.println("stock antes de decrementar "+stock);
 		if (comprobarStock) decrementaStock(value);
-//		System.out.println("stock despues de decrementar "+stock);
 		return comprobarStock;
 	}
 
+	public void incrementarStock(Integer value) {
+		stock+=value;
+	}
+	@Override
+	public String toString() {
+		return nombre;
+	}
 }

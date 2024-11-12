@@ -3,6 +3,7 @@ package modelo.data;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Queue;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -21,11 +22,18 @@ public class Cliente implements Callable {
 	private int cantidadaleatoriaMaxima = 5;
 	private ArticulosEnStrockRepositorio articulosEnStrockRepositorio;
 	private LocalTime inicial;
+	private Queue<Cliente> clientes;
 
-	public Cliente(String creditCard, ArticulosEnStrockRepositorio articulosEnStrockRepositorio) {
+	private Cliente(String creditCard, ArticulosEnStrockRepositorio articulosEnStrockRepositorio) {
 		super();
 		this.creditCard = creditCard;
 		this.articulosEnStrockRepositorio = articulosEnStrockRepositorio;
+	}
+
+	public Cliente(String creditCard, ArticulosEnStrockRepositorio articulosEnStrockRepositorio,
+			Queue<Cliente> clientes) {
+		this(creditCard, articulosEnStrockRepositorio);
+		this.clientes = clientes;
 	}
 
 	public void configurarListaAleatoria(int elementos, int cantidadMaxima) {
@@ -34,17 +42,16 @@ public class Cliente implements Callable {
 	}
 
 	@Override
-	public Object call() throws Exception {
+	public Cart call() throws Exception {
 		iniciarCompra();
 		while (!listaCompra.isEmpty()) {
 			hacerCompra();
 		}
-		pagarCompra();
+		hacerCola();
 		return carrito;
 	}
-	
 
-	public void hacerCompra() {
+	private void hacerCompra() {
 		Entry<Articulo, Integer> first = listaCompra.getFirst();
 		listaCompra.remove(first);
 		synchronized (articulosEnStrockRepositorio) {
@@ -52,27 +59,26 @@ public class Cliente implements Callable {
 				carrito.agregar(first.getKey(), first.getValue());
 			}
 		}
-
 	}
 
-	public void setListaAleatoria(boolean listaAleatoria) {
+	private void setListaAleatoria(boolean listaAleatoria) {
 		this.listaAleatoria = listaAleatoria;
 	}
 
 //Esto se aplica cuando no queremos la lista aleatoria. Es bueno para hacer test
-	public void asignarListaCompra(Cart listaCompra) {
+	private void asignarListaCompra(Cart listaCompra) {
 		this.setListaAleatoria(false);
 		this.listaCompra = listaCompra;
 	}
 
-	public void iniciarCompra() {
+	private void iniciarCompra() {
 		this.carrito = new Cart();
 		if (listaAleatoria) {
 			this.listaCompra = CartOMDummy.getListaCompra(elementosAleatoriosMaximos, cantidadaleatoriaMaxima);
 		}
 	}
 
-	public boolean agregarCarrito(Articulo articulo, int cantidad) {
+	private boolean agregarCarrito(Articulo articulo, int cantidad) {
 		return carrito.agregar(articulo, cantidad);
 	}
 
@@ -80,13 +86,11 @@ public class Cliente implements Callable {
 		return creditCard;
 	}
 
-	public boolean pagarCompra() {
-		System.out.println("soy "+creditCard+" y he comprado "+carrito.size()+" cosas");
-		System.out.println("he tardado "+Duration.between(inicial, LocalTime.now()));
-		return false;
+	private void hacerCola() {
+		clientes.add(this);
 	}
 
-	public List<Entry<Articulo, Integer>> getListaCompra() {
+	private List<Entry<Articulo, Integer>> getListaCompra() {
 		return set2List(listaCompra.get());
 	}
 
@@ -98,6 +102,9 @@ public class Cliente implements Callable {
 		return (List) set.stream().collect(Collectors.toList());
 	}
 
-	
+	public boolean pagar(double compra) {
+		int saldo=10;
+		return saldo>=compra;
+	}
 
 }
