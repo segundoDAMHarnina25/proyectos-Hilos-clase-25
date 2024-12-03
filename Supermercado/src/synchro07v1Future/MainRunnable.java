@@ -26,6 +26,7 @@ public class MainRunnable implements Runnable {
 		clientesCajero.add(submit2.get());
 		executorService.shutdown();
 		System.out.println("acaba el main");
+		
 	}
 
 	@Override

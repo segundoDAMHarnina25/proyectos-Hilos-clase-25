@@ -20,7 +20,11 @@ class HormigaTest {
 		ExecutorService executorService=Executors.newCachedThreadPool();
 		Future<IdoneidadADN> adn = executorService.submit(hormiga);
 		int extensionAdn = 3;
-		assertEquals(adnProgenitor.length()+extensionAdn,adn.get().getAdn().length());
+		IdoneidadADN idoneidadADN = adn.get();
+		assertEquals(adnProgenitor.length()+extensionAdn,idoneidadADN.getAdn().length());
+		assertEquals(hormiga.vida,hormiga.edad);
+		assertEquals(hormiga.cantidadRecogidas,hormiga.edad);
+		assertTrue(hormiga.cantidadAlimentos>0&&hormiga.cantidadAlimentos<hormiga.edad);
 		executorService.shutdown();
 		System.out.println();
 	}

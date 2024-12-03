@@ -10,13 +10,15 @@ import objectsmothers.AlimentoOM;
 
 public class Hormiga implements Callable<IdoneidadADN>{
 	private int vidaMax = 100, vidaMin = 80;
-	private int vida = getVidaAleatoria(vidaMin, vidaMax);
-	private int edad = 0;
+	public int vida = getVidaAleatoria(vidaMin, vidaMax);
+	public int edad = 0;
 	private String adn;
 	public static final int cantidadPoderNacimiento = 1000;
 	private List<Alimento> recogidos;
 	private Hormiguero hormiguero;
 	public int id;
+	public int cantidadAlimentos=0;
+	public int cantidadRecogidas=0;
 
 	public Hormiga(int id, String adnProgenitor, Hormiguero hormiguero) {
 		super();
@@ -36,10 +38,11 @@ public class Hormiga implements Callable<IdoneidadADN>{
 			Alimento alimento = recoger();
 			if (alimento != null) {
 				acarrear(alimento);
+				cantidadAlimentos++;
 				recogidos.add(alimento);
 			}
 			edad++;
-		
+			cantidadRecogidas++;
 		}
 		return new IdoneidadADN(adn, getIndiceSalubridadPoderMedio());
 
