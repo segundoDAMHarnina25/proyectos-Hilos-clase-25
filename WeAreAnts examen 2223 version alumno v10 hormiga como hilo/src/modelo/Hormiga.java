@@ -92,7 +92,7 @@ public class Hormiga implements Callable<IdoneidadADN>{
 		hormiguero.descargar(alimento);
 	}
 
-	private boolean isAlive() {
+	boolean isAlive() {
 		return vida > edad;
 	}
 
